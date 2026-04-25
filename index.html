@@ -49,6 +49,18 @@ a{color:inherit;text-decoration:none}
 }
 
 /* ==========================================================
+   PROGRESS BAR DE SCROLL (no topo)
+   ========================================================== */
+.scroll-bar{
+  position:fixed;top:0;left:0;
+  width:0;height:3px;
+  background:linear-gradient(90deg,var(--red),#ff5c6a);
+  z-index:200;
+  transition:width .1s linear;
+  box-shadow:0 0 12px rgba(230,57,70,.6);
+}
+
+/* ==========================================================
    COMPONENTES UTILITÁRIOS
    ========================================================== */
 .container{
@@ -79,7 +91,7 @@ a{color:inherit;text-decoration:none}
 }
 
 /* ==========================================================
-   01 — HERO
+   01 — HERO (entrada cinematográfica)
    ========================================================== */
 .hero{
   background:linear-gradient(160deg,#0D2B5C 0%,#08193A 100%);
@@ -96,6 +108,7 @@ a{color:inherit;text-decoration:none}
   background:radial-gradient(circle,rgba(230,57,70,.32),transparent 65%);
   filter:blur(8px);
   pointer-events:none;
+  animation:bgPulse 8s ease-in-out infinite;
 }
 .hero::after{
   content:"";
@@ -104,16 +117,22 @@ a{color:inherit;text-decoration:none}
   left:-160px;bottom:-160px;
   background:radial-gradient(circle,rgba(60,110,200,.25),transparent 70%);
   pointer-events:none;
+  animation:bgPulse 10s ease-in-out infinite reverse;
 }
-.hero__inner{
-  position:relative;z-index:2;
+@keyframes bgPulse{
+  0%,100%{transform:scale(1);opacity:1}
+  50%{transform:scale(1.15);opacity:.7}
 }
+
+.hero__inner{position:relative;z-index:2}
 .hero__top{
   display:flex;justify-content:space-between;align-items:center;
   font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
   color:rgba(255,255,255,.55);
   font-weight:500;
   margin-bottom:48px;
+  opacity:0;
+  animation:fadeIn .8s ease .2s both;
 }
 .hero__top .pin{display:inline-flex;align-items:center;gap:6px}
 .hero__top .pin::before{
@@ -124,11 +143,21 @@ a{color:inherit;text-decoration:none}
 }
 @keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(230,57,70,.2)}50%{box-shadow:0 0 0 8px rgba(230,57,70,0)}}
 
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes upIn{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes logoIn{
+  0%{transform:scale(.3) rotate(-180deg);opacity:0;filter:blur(8px)}
+  60%{filter:blur(0)}
+  100%{transform:scale(1) rotate(0);opacity:1;filter:blur(0)}
+}
+
 .hero__logo{
   width:200px;
   margin:0 auto 32px;
   filter:drop-shadow(0 16px 40px rgba(0,0,0,.35));
-  animation:float 6s ease-in-out infinite;
+  opacity:0;
+  animation:logoIn 1.4s cubic-bezier(.2,.8,.2,1) .1s both,
+            float 6s ease-in-out 1.5s infinite;
 }
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
@@ -140,6 +169,8 @@ a{color:inherit;text-decoration:none}
   letter-spacing:.01em;
   text-transform:uppercase;
   margin-bottom:20px;
+  opacity:0;
+  animation:upIn .9s cubic-bezier(.2,.8,.2,1) .8s both;
 }
 .hero__title span{color:var(--red);display:inline-block}
 
@@ -151,12 +182,16 @@ a{color:inherit;text-decoration:none}
   max-width:34ch;
   margin:0 auto 36px;
   font-weight:400;
+  opacity:0;
+  animation:upIn .9s cubic-bezier(.2,.8,.2,1) 1s both;
 }
 .hero__sub b{color:#fff;font-weight:600}
 
 .hero__cta-row{
   display:flex;flex-direction:column;gap:12px;
   max-width:340px;margin:0 auto;
+  opacity:0;
+  animation:upIn .9s cubic-bezier(.2,.8,.2,1) 1.2s both;
 }
 
 .btn{
@@ -190,6 +225,8 @@ a{color:inherit;text-decoration:none}
   font-size:.78rem;
   color:rgba(255,255,255,.7);
   font-weight:500;
+  opacity:0;
+  animation:upIn .9s cubic-bezier(.2,.8,.2,1) 1.4s both;
 }
 .hero__badges span{display:inline-flex;align-items:center;gap:6px}
 .hero__badges span::before{
@@ -202,12 +239,76 @@ a{color:inherit;text-decoration:none}
 }
 
 /* ==========================================================
-   02 — INTRO / MANIFESTO
+   02 — STATS (números animados)
+   ========================================================== */
+.stats{
+  background:var(--navy-deep);
+  color:#fff;
+  padding:48px 0;
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  position:relative;
+  overflow:hidden;
+}
+.stats::before{
+  content:"";
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(230,57,70,.06),transparent);
+  pointer-events:none;
+}
+.stats__grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:32px 16px;
+  text-align:center;
+  position:relative;z-index:2;
+}
+.stat__num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.6rem,9vw,4.2rem);
+  line-height:1;
+  color:var(--red);
+  letter-spacing:.02em;
+  display:flex;align-items:baseline;justify-content:center;gap:4px;
+}
+.stat__num::after{
+  content:attr(data-suffix);
+  font-size:.5em;
+  color:rgba(255,255,255,.6);
+}
+.stat__label{
+  margin-top:8px;
+  font-size:.74rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.65);
+  font-weight:600;
+}
+@media(min-width:768px){
+  .stats{padding:72px 0}
+  .stats__grid{grid-template-columns:repeat(4,1fr);gap:24px}
+}
+
+/* ==========================================================
+   03 — INTRO / MANIFESTO
    ========================================================== */
 .intro{
   background:var(--bone);
   padding:72px 0;
   text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.intro::before{
+  content:"PINGO";
+  position:absolute;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(8rem,28vw,20rem);
+  line-height:.8;
+  top:-20px;left:-30px;
+  color:rgba(15,23,42,.04);
+  pointer-events:none;
+  letter-spacing:-.02em;
 }
 .intro__text{
   font-family:'Bebas Neue',sans-serif;
@@ -218,6 +319,7 @@ a{color:inherit;text-decoration:none}
   max-width:18ch;
   margin:24px auto 0;
   color:var(--navy-deep);
+  position:relative;
 }
 .intro__text em{font-style:normal;color:var(--red)}
 .intro__sub{
@@ -226,21 +328,19 @@ a{color:inherit;text-decoration:none}
   max-width:42ch;
   margin-left:auto;margin-right:auto;
   font-size:1rem;
+  position:relative;
 }
 @media(min-width:768px){.intro{padding:120px 0}}
 
 /* ==========================================================
-   03 — SHOWCASE / LOGO MASTER
+   04 — SHOWCASE
    ========================================================== */
 .showcase{
   background:#fff;
   padding:64px 0;
   position:relative;
 }
-.showcase__head{
-  text-align:center;
-  margin-bottom:40px;
-}
+.showcase__head{text-align:center;margin-bottom:40px}
 .showcase__head h2{
   font-family:'Bebas Neue',sans-serif;
   font-size:clamp(2.2rem,8vw,3.2rem);
@@ -272,7 +372,10 @@ a{color:inherit;text-decoration:none}
   width:min(78%,320px);
   margin:0 auto;
   filter:drop-shadow(0 20px 40px rgba(15,23,42,.18));
+  cursor:zoom-in;
+  transition:transform .4s ease;
 }
+.master__img:hover{transform:scale(1.04)}
 .master__cap{
   margin-top:32px;
   font-family:'Bebas Neue',sans-serif;
@@ -296,7 +399,7 @@ a{color:inherit;text-decoration:none}
   content:"";flex:1;height:1px;background:var(--line);
 }
 
-/* grid de variações — 2 colunas no mobile, 4 no desktop */
+/* variações 2/3/5 cols */
 .variations{
   display:grid;
   grid-template-columns:repeat(2,1fr);
@@ -310,24 +413,18 @@ a{color:inherit;text-decoration:none}
   display:flex;align-items:center;justify-content:center;
   aspect-ratio:1;
   transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  cursor:zoom-in;
 }
 .variation:hover{
-  transform:translateY(-3px);
+  transform:translateY(-3px) rotate(-1deg);
   box-shadow:var(--shadow-md);
   border-color:rgba(230,57,70,.3);
 }
-.variation img{
-  width:100%;height:100%;
-  object-fit:contain;
-}
-@media(min-width:600px){
-  .variations{grid-template-columns:repeat(3,1fr)}
-}
-@media(min-width:900px){
-  .variations{grid-template-columns:repeat(4,1fr);gap:16px}
-}
+.variation img{width:100%;height:100%;object-fit:contain}
+@media(min-width:600px){.variations{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.variations{grid-template-columns:repeat(5,1fr);gap:16px}}
 
-/* cartões — 1 por linha no mobile, 2 no desktop */
+/* CARTÕES */
 .cards-grid{
   display:grid;
   grid-template-columns:1fr;
@@ -339,11 +436,10 @@ a{color:inherit;text-decoration:none}
   overflow:hidden;
   box-shadow:var(--shadow-sm);
   transition:transform .25s ease, box-shadow .25s ease;
+  cursor:zoom-in;
 }
 .card-piece:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
-.card-piece img{
-  width:100%;height:auto;display:block;
-}
+.card-piece img{width:100%;height:auto;display:block}
 .card-piece__cap{
   padding:14px 18px;
   font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;
@@ -353,29 +449,99 @@ a{color:inherit;text-decoration:none}
   display:flex;justify-content:space-between;align-items:center;
 }
 .card-piece__cap span{color:var(--red);font-weight:700}
-@media(min-width:768px){
-  .cards-grid{grid-template-columns:1fr 1fr;gap:20px}
-}
+@media(min-width:768px){.cards-grid{grid-template-columns:1fr 1fr;gap:20px}}
 
-/* posts/stories/panfletos */
-.media-grid{
+/* ==========================================================
+   BENTO GRID — comunicação visual
+   ========================================================== */
+.bento{
   display:grid;
   grid-template-columns:repeat(2,1fr);
-  gap:12px;
+  gap:10px;
+  grid-auto-rows:120px;
 }
-.media-grid .item{
+.bento .b{
+  background:#FAFAF7;
   border-radius:var(--r-sm);
   overflow:hidden;
-  background:#FAFAF7;
   box-shadow:var(--shadow-sm);
-  transition:transform .25s ease, box-shadow .25s ease;
+  position:relative;
+  cursor:zoom-in;
+  transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
 }
-.media-grid .item:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
-.media-grid .item img{
-  width:100%;height:auto;display:block;
+.bento .b:hover{
+  transform:translateY(-4px) scale(1.01);
+  box-shadow:var(--shadow-lg);
+  z-index:2;
 }
+.bento .b img{
+  width:100%;height:100%;
+  object-fit:cover;
+  transition:transform .8s cubic-bezier(.2,.8,.2,1);
+}
+.bento .b:hover img{transform:scale(1.05)}
+.bento .b::after{
+  content:"";
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 60%,rgba(8,25,58,.55));
+  opacity:0;transition:opacity .3s;
+  pointer-events:none;
+}
+.bento .b:hover::after{opacity:1}
+.bento .b__tag{
+  position:absolute;
+  bottom:10px;left:10px;
+  background:rgba(255,255,255,.95);
+  color:var(--ink);
+  padding:5px 10px;
+  font-size:.6rem;letter-spacing:.2em;font-weight:700;text-transform:uppercase;
+  border-radius:4px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .3s ease, transform .3s ease;
+  z-index:3;
+}
+.bento .b:hover .b__tag{opacity:1;transform:translateY(0)}
+
+/* mobile: tudo span 1 row, cells 2x */
+.bento .b{grid-row:span 2}
+.bento .b--tall{grid-row:span 3}
+.bento .b--wide{grid-column:span 2;grid-row:span 2}
+
+/* desktop bento */
 @media(min-width:768px){
-  .media-grid{grid-template-columns:repeat(3,1fr);gap:16px}
+  .bento{
+    grid-template-columns:repeat(4,1fr);
+    grid-auto-rows:130px;
+    gap:14px;
+  }
+  .bento .b{grid-row:span 2}
+  .bento .b--tall{grid-row:span 3}
+  .bento .b--wide{grid-column:span 2;grid-row:span 2}
+  .bento .b--big{grid-column:span 2;grid-row:span 3}
+}
+
+/* bento text card (highlight no meio) */
+.bento .b--text{
+  background:linear-gradient(160deg,var(--navy),var(--navy-deep));
+  color:#fff;
+  padding:24px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  cursor:default;
+}
+.bento .b--text:hover{transform:translateY(-4px)}
+.bento .b--text::after{display:none}
+.bento .b--text h4{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.6rem;
+  line-height:1;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+}
+.bento .b--text h4 em{font-style:normal;color:var(--red)}
+.bento .b--text p{
+  font-size:.78rem;
+  color:rgba(255,255,255,.65);
+  letter-spacing:.05em;
 }
 
 @media(min-width:768px){
@@ -385,7 +551,78 @@ a{color:inherit;text-decoration:none}
 }
 
 /* ==========================================================
-   04 — COMBOS
+   05 — BENEFÍCIOS / Por que vai dar resultado
+   ========================================================== */
+.benefits{
+  background:var(--bone);
+  padding:80px 0 90px;
+  position:relative;
+}
+.benefits__head{text-align:center;margin-bottom:48px}
+.benefits__head h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.2rem,8vw,3.4rem);
+  line-height:1;
+  text-transform:uppercase;
+  margin:16px 0 0;
+  color:var(--navy-deep);
+}
+.benefits__head h2 em{font-style:normal;color:var(--red)}
+
+.benefits__grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
+}
+@media(min-width:768px){
+  .benefits__grid{grid-template-columns:repeat(3,1fr);gap:20px}
+}
+
+.benefit{
+  background:#fff;
+  border-radius:var(--r);
+  padding:32px 26px;
+  box-shadow:var(--shadow-sm);
+  position:relative;
+  overflow:hidden;
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.benefit:hover{transform:translateY(-6px);box-shadow:var(--shadow-md)}
+.benefit::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;
+  width:60px;height:4px;
+  background:var(--red);
+  transition:width .3s ease;
+}
+.benefit:hover::before{width:100%}
+.benefit__icon{
+  width:52px;height:52px;
+  background:rgba(230,57,70,.1);
+  border-radius:14px;
+  display:grid;place-items:center;
+  margin-bottom:20px;
+  color:var(--red);
+}
+.benefit__icon svg{width:26px;height:26px}
+.benefit h3{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.5rem;
+  line-height:1.05;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+  color:var(--navy-deep);
+  margin-bottom:10px;
+}
+.benefit p{
+  font-size:.95rem;
+  color:var(--muted);
+  line-height:1.55;
+}
+
+/* ==========================================================
+   06 — COMBOS
    ========================================================== */
 .combos{
   background:linear-gradient(170deg,#0D2B5C,#08193A);
@@ -396,8 +633,7 @@ a{color:inherit;text-decoration:none}
 }
 .combos::before{
   content:"";
-  position:absolute;
-  inset:0;
+  position:absolute;inset:0;
   background:radial-gradient(ellipse at 50% 0%,rgba(230,57,70,.18),transparent 50%);
   pointer-events:none;
 }
@@ -508,21 +744,6 @@ a{color:inherit;text-decoration:none}
 .plan--featured .plan__list li{color:rgba(255,255,255,.92)}
 .plan--featured .plan__list li svg{color:var(--red)}
 
-.plan__badge{
-  position:absolute;
-  top:-14px;left:50%;transform:translateX(-50%);
-  background:var(--red);
-  color:#fff;
-  font-size:.7rem;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  font-weight:700;
-  padding:8px 16px;
-  border-radius:30px;
-  white-space:nowrap;
-  box-shadow:0 8px 20px rgba(230,57,70,.4);
-}
-
 .guarantee{
   text-align:center;
   margin-top:36px;
@@ -543,7 +764,7 @@ a{color:inherit;text-decoration:none}
 }
 
 /* ==========================================================
-   05 — DEPOIMENTO
+   07 — DEPOIMENTO
    ========================================================== */
 .quote{
   background:var(--bone);
@@ -580,7 +801,7 @@ a{color:inherit;text-decoration:none}
 .quote cite b{color:var(--ink);font-weight:700}
 
 /* ==========================================================
-   FAQ rápido
+   FAQ
    ========================================================== */
 .faq{
   background:#fff;
@@ -595,9 +816,7 @@ a{color:inherit;text-decoration:none}
   margin-bottom:28px;
   color:var(--navy-deep);
 }
-.faq__item{
-  border-bottom:1px solid var(--line);
-}
+.faq__item{border-bottom:1px solid var(--line)}
 .faq__q{
   width:100%;
   display:flex;justify-content:space-between;align-items:center;gap:16px;
@@ -709,11 +928,8 @@ a{color:inherit;text-decoration:none}
 }
 
 .pix-label{
-  font-size:.75rem;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  font-weight:600;
-  color:var(--muted);
+  font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;
+  font-weight:600;color:var(--muted);
   margin-bottom:8px;
 }
 .pix-box{
@@ -742,10 +958,7 @@ a{color:inherit;text-decoration:none}
 .pix-copy:active{transform:scale(.96)}
 .pix-copy.is-copied{background:#1F8A4C}
 
-.steps{
-  list-style:none;counter-reset:s;
-  margin:0 0 22px;padding:0;
-}
+.steps{list-style:none;counter-reset:s;margin:0;padding:0}
 .steps li{
   counter-increment:s;
   padding:14px 0 14px 44px;
@@ -766,25 +979,53 @@ a{color:inherit;text-decoration:none}
   font-weight:700;font-size:.85rem;
 }
 
-.wpp{
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  background:#1FAA55;color:#fff;
-  padding:18px;
-  border-radius:var(--r-sm);
-  font-weight:700;
-  font-size:.98rem;
-  letter-spacing:.01em;
-  width:100%;
-  transition:background .25s, transform .15s;
-  box-shadow:0 8px 18px rgba(31,170,85,.35);
-}
-.wpp:hover{background:#198F47}
-.wpp:active{transform:scale(.98)}
-.wpp svg{width:22px;height:22px;fill:currentColor}
-
 @media(min-width:768px){
   .modal{align-items:center;padding:24px}
   .modal__box{border-radius:20px}
+}
+
+/* ==========================================================
+   LIGHTBOX
+   ========================================================== */
+.lightbox{
+  position:fixed;inset:0;
+  background:rgba(8,25,58,.96);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  display:none;
+  align-items:center;justify-content:center;
+  z-index:120;
+  padding:24px;
+  cursor:zoom-out;
+  opacity:0;
+  transition:opacity .25s ease;
+}
+.lightbox.is-open{display:flex;opacity:1}
+.lightbox img{
+  max-width:100%;
+  max-height:88vh;
+  object-fit:contain;
+  border-radius:8px;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+  transform:scale(.96);
+  transition:transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.lightbox.is-open img{transform:scale(1)}
+.lightbox__close{
+  position:absolute;top:18px;right:18px;
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(255,255,255,.12);
+  color:#fff;font-size:1.4rem;
+  display:grid;place-items:center;
+  backdrop-filter:blur(8px);
+  transition:background .25s;
+}
+.lightbox__close:hover{background:rgba(255,255,255,.22)}
+.lightbox__hint{
+  position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+  font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+  font-weight:500;
 }
 
 /* ==========================================================
@@ -792,14 +1033,21 @@ a{color:inherit;text-decoration:none}
    ========================================================== */
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1)}
 .reveal.is-in{opacity:1;transform:none}
+.reveal[data-d="1"]{transition-delay:.08s}
+.reveal[data-d="2"]{transition-delay:.16s}
+.reveal[data-d="3"]{transition-delay:.24s}
+.reveal[data-d="4"]{transition-delay:.32s}
 
 @media(prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important}
+  *,*::before,*::after{animation:none!important;transition:none!important}
   .reveal{opacity:1;transform:none}
 }
 </style>
 </head>
 <body>
+
+<!-- progresso de scroll -->
+<div class="scroll-bar" id="scrollBar"></div>
 
 <!-- ==========================================================
      01 — HERO
@@ -811,17 +1059,17 @@ a{color:inherit;text-decoration:none}
       <span>Identidade 2026</span>
     </div>
 
-    <img class="hero__logo reveal" src="pacote%20de%20logos%20pingo/A_circular_emblem_202604250833.jpeg" alt="Logo Pingo Lava Jato" />
+    <img class="hero__logo" src="pacote%20de%20logos%20pingo/A_circular_emblem_202604250833.jpeg" alt="Logo Pingo Lava Jato" />
 
-    <h1 class="hero__title reveal">
+    <h1 class="hero__title">
       Sua marca,<br/>do jeito <span>certo.</span>
     </h1>
 
-    <p class="hero__sub reveal">
+    <p class="hero__sub">
       Identidade visual completa pro <b>Pingo Lava Jato</b>. Logo, cartão, panfleto e redes sociais — tudo pronto pra usar hoje.
     </p>
 
-    <div class="hero__cta-row reveal">
+    <div class="hero__cta-row">
       <a class="btn btn--primary" href="#combos">Ver os combos</a>
       <a class="btn btn--ghost" href="#trabalho">Ver o trabalho</a>
     </div>
@@ -835,102 +1083,189 @@ a{color:inherit;text-decoration:none}
 </section>
 
 <!-- ==========================================================
-     02 — INTRO
+     02 — STATS
+========================================================== -->
+<section class="stats">
+  <div class="container">
+    <div class="stats__grid">
+      <div class="stat reveal">
+        <div class="stat__num" data-target="10" data-suffix="">0</div>
+        <div class="stat__label">Variações de logo</div>
+      </div>
+      <div class="stat reveal" data-d="1">
+        <div class="stat__num" data-target="5" data-suffix="">0</div>
+        <div class="stat__label">Templates de stories</div>
+      </div>
+      <div class="stat reveal" data-d="2">
+        <div class="stat__num" data-target="3" data-suffix="">0</div>
+        <div class="stat__label">Posts pro feed</div>
+      </div>
+      <div class="stat reveal" data-d="3">
+        <div class="stat__num" data-target="100" data-suffix="%">0</div>
+        <div class="stat__label">Identidade pronta</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     03 — INTRO
 ========================================================== -->
 <section class="intro">
   <div class="container">
     <span class="eyebrow reveal">Por que importa</span>
-    <h2 class="intro__text reveal">
+    <h2 class="intro__text reveal" data-d="1">
       Marca limpa, <em>cliente fiel.</em>
     </h2>
-    <p class="intro__sub reveal">
+    <p class="intro__sub reveal" data-d="2">
       A primeira coisa que o cliente vê é a sua marca. Profissional ou amador? Confia ou passa reto? A decisão é tomada em 3 segundos. Aqui você não dá chance pra dúvida.
     </p>
   </div>
 </section>
 
 <!-- ==========================================================
-     03 — SHOWCASE
+     04 — SHOWCASE
 ========================================================== -->
 <section class="showcase" id="trabalho">
   <div class="container">
     <div class="showcase__head reveal">
       <span class="eyebrow">O Trabalho</span>
       <h2>Cada peça pensada<br/>pro seu negócio.</h2>
-      <p>Veja o pacote completo de identidade visual que foi criado pro Pingo Lava Jato.</p>
+      <p>Toque em qualquer peça pra ver de perto. O pacote completo de identidade que foi criado pro Pingo Lava Jato.</p>
     </div>
 
     <!-- LOGO MASTER -->
     <div class="master reveal">
-      <img class="master__img" src="pacote%20de%20logos%20pingo/A_circular_emblem_202604250833.jpeg" alt="Logo principal Pingo Lava Jato" />
+      <img class="master__img zoomable" src="pacote%20de%20logos%20pingo/A_circular_emblem_202604250833.jpeg" alt="Logo principal Pingo Lava Jato" />
       <p class="master__cap">Logo principal — a cara da marca</p>
     </div>
 
     <!-- VARIAÇÕES -->
     <h3 class="section-title reveal">10 variações da logo</h3>
     <div class="variations">
-      <div class="variation reveal"><img src="pacote%20de%20logos%20pingo/A_circular_emblem_202604250833.jpeg" alt="Logo principal" /></div>
-      <div class="variation reveal"><img src="pacote%20de%20logos%20pingo/A_circular_emblem_202604250833%20%281%29.jpeg" alt="Variação 2" /></div>
-      <div class="variation reveal"><img src="pacote%20de%20logos%20pingo/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2008_30_42.png" alt="Variação clássica vermelha" /></div>
-      <div class="variation reveal"><img src="pacote%20de%20logos%20pingo/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2008_25_24.png" alt="Variação vibrante" /></div>
-      <div class="variation reveal"><img src="pacote%20de%20logos%20pingo/A_circular_emblem_202604250826.jpeg" alt="Variação azul/laranja" /></div>
-      <div class="variation reveal"><img src="pacote%20de%20logos%20pingo/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2008_38_17.png" alt="Variação escudo" /></div>
-      <div class="variation reveal"><img src="pacote%20de%20logos%20pingo/A_shield-shaped_emblem_202604250837.jpeg" alt="Escudo monocromático" /></div>
-      <div class="variation reveal"><img src="pacote%20de%20logos%20pingo/A_shield-shaped_emblem_202604250838.jpeg" alt="Escudo navy" /></div>
-      <div class="variation reveal"><img src="pacote%20de%20logos%20pingo/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2008_45_06.png" alt="Variação hexagonal" /></div>
-      <div class="variation reveal"><img src="pacote%20de%20logos%20pingo/A_hexagonal_badge_202604250841.jpeg" alt="Badge hexagonal" /></div>
+      <div class="variation reveal"><img class="zoomable" src="pacote%20de%20logos%20pingo/A_circular_emblem_202604250833.jpeg" alt="Logo principal" /></div>
+      <div class="variation reveal" data-d="1"><img class="zoomable" src="pacote%20de%20logos%20pingo/A_circular_emblem_202604250833%20%281%29.jpeg" alt="Variação 2" /></div>
+      <div class="variation reveal" data-d="2"><img class="zoomable" src="pacote%20de%20logos%20pingo/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2008_30_42.png" alt="Variação clássica vermelha" /></div>
+      <div class="variation reveal" data-d="3"><img class="zoomable" src="pacote%20de%20logos%20pingo/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2008_25_24.png" alt="Variação vibrante" /></div>
+      <div class="variation reveal" data-d="4"><img class="zoomable" src="pacote%20de%20logos%20pingo/A_circular_emblem_202604250826.jpeg" alt="Variação azul/laranja" /></div>
+      <div class="variation reveal"><img class="zoomable" src="pacote%20de%20logos%20pingo/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2008_38_17.png" alt="Variação escudo" /></div>
+      <div class="variation reveal" data-d="1"><img class="zoomable" src="pacote%20de%20logos%20pingo/A_shield-shaped_emblem_202604250837.jpeg" alt="Escudo monocromático" /></div>
+      <div class="variation reveal" data-d="2"><img class="zoomable" src="pacote%20de%20logos%20pingo/A_shield-shaped_emblem_202604250838.jpeg" alt="Escudo navy" /></div>
+      <div class="variation reveal" data-d="3"><img class="zoomable" src="pacote%20de%20logos%20pingo/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2008_45_06.png" alt="Variação hexagonal" /></div>
+      <div class="variation reveal" data-d="4"><img class="zoomable" src="pacote%20de%20logos%20pingo/A_hexagonal_badge_202604250841.jpeg" alt="Badge hexagonal" /></div>
     </div>
 
     <!-- CARTÕES DE VISITA -->
     <h3 class="section-title reveal">Cartão de visita</h3>
     <div class="cards-grid">
       <div class="card-piece reveal">
-        <img src="cart%C3%A3o%20de%20visita%201/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_10_08.png" alt="Cartão modelo 1 frente" />
+        <img class="zoomable" src="cart%C3%A3o%20de%20visita%201/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_10_08.png" alt="Cartão modelo 1 frente" />
         <div class="card-piece__cap"><span>Modelo 01</span> Frente</div>
       </div>
-      <div class="card-piece reveal">
-        <img src="cart%C3%A3o%20de%20visita%201/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_11_07.png" alt="Cartão modelo 1 verso" />
+      <div class="card-piece reveal" data-d="1">
+        <img class="zoomable" src="cart%C3%A3o%20de%20visita%201/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_11_07.png" alt="Cartão modelo 1 verso" />
         <div class="card-piece__cap"><span>Modelo 01</span> Verso</div>
       </div>
-      <div class="card-piece reveal">
-        <img src="cart%C3%A3o%20de%20visita%202/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_16_52.png" alt="Cartão modelo 2 frente" />
+      <div class="card-piece reveal" data-d="2">
+        <img class="zoomable" src="cart%C3%A3o%20de%20visita%202/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_16_52.png" alt="Cartão modelo 2 frente" />
         <div class="card-piece__cap"><span>Modelo 02</span> Frente</div>
       </div>
-      <div class="card-piece reveal">
-        <img src="cart%C3%A3o%20de%20visita%202/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_17_11.png" alt="Cartão modelo 2 verso" />
+      <div class="card-piece reveal" data-d="3">
+        <img class="zoomable" src="cart%C3%A3o%20de%20visita%202/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_17_11.png" alt="Cartão modelo 2 verso" />
         <div class="card-piece__cap"><span>Modelo 02</span> Verso</div>
       </div>
     </div>
 
-    <!-- POSTS INSTAGRAM -->
-    <h3 class="section-title reveal">Posts pro feed</h3>
-    <div class="media-grid">
-      <div class="item reveal"><img src="post%20instagram/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2009_44_07.png" alt="Post De suja a nova" /></div>
-      <div class="item reveal"><img src="post%20instagram/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2009_44_32.png" alt="Post 2" /></div>
-      <div class="item reveal"><img src="post%20instagram/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2009_44_44.png" alt="Post 3" /></div>
-    </div>
+    <!-- BENTO GRID — Comunicação visual -->
+    <h3 class="section-title reveal">Comunicação completa</h3>
+    <div class="bento">
+      <div class="b b--big reveal">
+        <img class="zoomable" src="panfletos/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_34_00.png" alt="Panfleto principal" />
+        <span class="b__tag">Panfleto</span>
+      </div>
+      <div class="b b--tall reveal" data-d="1">
+        <img class="zoomable" src="stories/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_39_03.png" alt="Story 1" />
+        <span class="b__tag">Story</span>
+      </div>
+      <div class="b reveal" data-d="2">
+        <img class="zoomable" src="post%20instagram/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2009_44_07.png" alt="Post 1" />
+        <span class="b__tag">Post</span>
+      </div>
 
-    <!-- STORIES -->
-    <h3 class="section-title reveal">Templates de stories</h3>
-    <div class="media-grid">
-      <div class="item reveal"><img src="stories/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_39_03.png" alt="Story 1" /></div>
-      <div class="item reveal"><img src="stories/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_39_24.png" alt="Story 2" /></div>
-      <div class="item reveal"><img src="stories/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_39_36.png" alt="Story 3" /></div>
-    </div>
+      <div class="b b--text reveal">
+        <h4>Marca <em>viva</em><br/>na rua e no feed.</h4>
+        <p>Online e offline falando a mesma língua.</p>
+      </div>
+      <div class="b reveal" data-d="1">
+        <img class="zoomable" src="stories/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_39_24.png" alt="Story 2" />
+        <span class="b__tag">Story</span>
+      </div>
+      <div class="b b--tall reveal" data-d="2">
+        <img class="zoomable" src="post%20instagram/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2009_44_32.png" alt="Post 2" />
+        <span class="b__tag">Post</span>
+      </div>
 
-    <!-- PANFLETOS -->
-    <h3 class="section-title reveal">Panfleto promocional</h3>
-    <div class="media-grid">
-      <div class="item reveal"><img src="panfletos/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_34_00.png" alt="Panfleto 1" /></div>
-      <div class="item reveal"><img src="panfletos/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_34_21.png" alt="Panfleto 2" /></div>
-      <div class="item reveal"><img src="panfletos/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_34_43.png" alt="Panfleto 3" /></div>
+      <div class="b reveal">
+        <img class="zoomable" src="panfletos/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_34_21.png" alt="Panfleto 2" />
+        <span class="b__tag">Panfleto</span>
+      </div>
+      <div class="b b--wide reveal" data-d="1">
+        <img class="zoomable" src="stories/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_39_36.png" alt="Story 3" />
+        <span class="b__tag">Story</span>
+      </div>
+      <div class="b reveal" data-d="2">
+        <img class="zoomable" src="post%20instagram/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2009_44_44.png" alt="Post 3" />
+        <span class="b__tag">Post</span>
+      </div>
+      <div class="b b--wide reveal" data-d="3">
+        <img class="zoomable" src="panfletos/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_34_43.png" alt="Panfleto 3" />
+        <span class="b__tag">Panfleto</span>
+      </div>
     </div>
 
   </div>
 </section>
 
 <!-- ==========================================================
-     04 — COMBOS
+     05 — BENEFÍCIOS
+========================================================== -->
+<section class="benefits">
+  <div class="container">
+    <div class="benefits__head reveal">
+      <span class="eyebrow">O que muda na prática</span>
+      <h2>Marca não é decoração.<br/>É <em>vendedor silencioso.</em></h2>
+    </div>
+
+    <div class="benefits__grid">
+      <article class="benefit reveal">
+        <div class="benefit__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/><circle cx="12" cy="12" r="4"/></svg>
+        </div>
+        <h3>Cliente lembra de você</h3>
+        <p>Marca consistente vira referência. Quando alguém precisar de lava jato, o nome que vem na cabeça é o seu.</p>
+      </article>
+
+      <article class="benefit reveal" data-d="1">
+        <div class="benefit__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </div>
+        <h3>Aparece mais no Insta</h3>
+        <p>Posts e stories profissionais prontos pra postar. Mais alcance, mais seguidor, mais cliente entrando.</p>
+      </article>
+
+      <article class="benefit reveal" data-d="2">
+        <div class="benefit__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3>Cobra mais caro</h3>
+        <p>Quem tem identidade tem autoridade. Concorrência amadora cobra R$15. Você pode cobrar R$30 e o cliente paga.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     06 — COMBOS
 ========================================================== -->
 <section class="combos" id="combos">
   <div class="container">
@@ -959,7 +1294,7 @@ a{color:inherit;text-decoration:none}
         <button class="btn btn--ghost" data-open="essencial" style="background:#0F172A;color:#fff;border:0">Quero o Essencial</button>
       </article>
 
-      <article class="plan plan--featured reveal">
+      <article class="plan plan--featured reveal" data-d="1">
         <h3 class="plan__name">Completo</h3>
         <span class="plan__tag">Pra dominar a região</span>
 
@@ -989,7 +1324,7 @@ a{color:inherit;text-decoration:none}
 </section>
 
 <!-- ==========================================================
-     05 — DEPOIMENTO
+     07 — DEPOIMENTO
 ========================================================== -->
 <section class="quote">
   <div class="container">
@@ -997,7 +1332,7 @@ a{color:inherit;text-decoration:none}
     <blockquote class="reveal">
       Finalmente meu negócio tem cara de verdade.
     </blockquote>
-    <cite class="reveal">— <b>José Fernandes "Pingo"</b> · Proprietário</cite>
+    <cite class="reveal" data-d="1">— <b>José Fernandes "Pingo"</b> · Proprietário</cite>
   </div>
 </section>
 
@@ -1065,12 +1400,21 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
+<!-- ==========================================================
+     LIGHTBOX
+========================================================== -->
+<div class="lightbox" id="lightbox" role="dialog" aria-hidden="true">
+  <button class="lightbox__close" id="lightboxClose" aria-label="Fechar">✕</button>
+  <img id="lightboxImg" src="" alt="" />
+  <div class="lightbox__hint">toque pra fechar</div>
+</div>
+
 <script>
 /* ==========================================================
-   CONFIG — edite só essas duas linhas
+   CONFIG
    ========================================================== */
 const PIX_KEY = "c129d8b0-5e53-42d3-9770-c7c892b05bcf";
-const WHATSAPP = "5586999406863"; // do panfleto: 86 9940-6863
+const WHATSAPP = "5586999406863";
 
 const COMBOS = {
   essencial:{ name:"Combo Essencial", price:"47" },
@@ -1106,7 +1450,9 @@ document.querySelectorAll('[data-open]').forEach(b=>{
 });
 closeBtn.addEventListener('click',closeModal);
 modal.addEventListener('click',e=>{ if(e.target===modal) closeModal(); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ closeModal(); closeLightbox(); }
+});
 
 /* COPIAR PIX */
 pixCopy.addEventListener('click', async ()=>{
@@ -1121,18 +1467,95 @@ pixCopy.addEventListener('click', async ()=>{
   setTimeout(()=>{ pixCopy.textContent='Copiar'; pixCopy.classList.remove('is-copied'); },1800);
 });
 
-/* FAQ accordion */
+/* FAQ */
 document.querySelectorAll('.faq__item').forEach(item=>{
   item.querySelector('.faq__q').addEventListener('click',()=>item.classList.toggle('is-open'));
 });
 
-/* REVEAL */
+/* ==========================================================
+   LIGHTBOX
+   ========================================================== */
+const lb     = document.getElementById('lightbox');
+const lbImg  = document.getElementById('lightboxImg');
+const lbClose= document.getElementById('lightboxClose');
+
+function openLightbox(src,alt){
+  lbImg.src = src;
+  lbImg.alt = alt || '';
+  lb.classList.add('is-open');
+  lb.setAttribute('aria-hidden','false');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox(){
+  lb.classList.remove('is-open');
+  lb.setAttribute('aria-hidden','true');
+  document.body.style.overflow = '';
+  setTimeout(()=>{ lbImg.src=''; },250);
+}
+
+document.querySelectorAll('img.zoomable, .b img, .card-piece img, .variation img').forEach(img=>{
+  img.style.cursor = 'zoom-in';
+  img.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    openLightbox(img.src, img.alt);
+  });
+});
+lb.addEventListener('click',closeLightbox);
+lbClose.addEventListener('click',(e)=>{e.stopPropagation();closeLightbox();});
+
+/* ==========================================================
+   STATS COUNTER
+   ========================================================== */
+function animateCount(el){
+  const target = parseInt(el.dataset.target,10);
+  const duration = 1400;
+  const start = performance.now();
+  const tick = (t)=>{
+    const p = Math.min((t-start)/duration, 1);
+    const eased = 1 - Math.pow(1-p, 3); // ease-out cubic
+    el.textContent = Math.floor(target * eased);
+    if(p < 1) requestAnimationFrame(tick);
+    else el.textContent = target;
+  };
+  requestAnimationFrame(tick);
+}
+
+const statsObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.stat__num').forEach(animateCount);
+      statsObserver.unobserve(e.target);
+    }
+  });
+},{threshold:.4});
+document.querySelectorAll('.stats').forEach(s=>statsObserver.observe(s));
+
+/* ==========================================================
+   REVEAL
+   ========================================================== */
 const io = new IntersectionObserver((entries)=>{
   entries.forEach(e=>{
     if(e.isIntersecting){ e.target.classList.add('is-in'); io.unobserve(e.target); }
   });
-},{threshold:.1, rootMargin:'0px 0px -40px 0px'});
+},{threshold:.12, rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ==========================================================
+   SCROLL PROGRESS BAR
+   ========================================================== */
+const bar = document.getElementById('scrollBar');
+let ticking = false;
+window.addEventListener('scroll',()=>{
+  if(!ticking){
+    requestAnimationFrame(()=>{
+      const h = document.documentElement;
+      const scrolled = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+      bar.style.width = scrolled + '%';
+      ticking = false;
+    });
+    ticking = true;
+  }
+});
 </script>
 
 </body>
