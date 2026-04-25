@@ -451,6 +451,26 @@ a{color:inherit;text-decoration:none}
 .card-piece__cap span{color:var(--red);font-weight:700}
 @media(min-width:768px){.cards-grid{grid-template-columns:1fr 1fr;gap:20px}}
 
+/* MEDIA GRID — posts / stories / panfletos */
+.media-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+.media-grid .item{
+  border-radius:var(--r-sm);
+  overflow:hidden;
+  background:#FAFAF7;
+  box-shadow:var(--shadow-sm);
+  transition:transform .25s ease, box-shadow .25s ease;
+  cursor:zoom-in;
+}
+.media-grid .item:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.media-grid .item img{width:100%;height:auto;display:block}
+@media(min-width:768px){
+  .media-grid{grid-template-columns:repeat(3,1fr);gap:16px}
+}
+
 /* ==========================================================
    BENTO GRID — comunicação visual
    ========================================================== */
@@ -1176,51 +1196,28 @@ a{color:inherit;text-decoration:none}
       </div>
     </div>
 
-    <!-- BENTO GRID — Comunicação visual -->
-    <h3 class="section-title reveal">Comunicação completa</h3>
-    <div class="bento">
-      <div class="b b--big reveal">
-        <img class="zoomable" src="panfletos/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_34_00.png" alt="Panfleto principal" />
-        <span class="b__tag">Panfleto</span>
-      </div>
-      <div class="b b--tall reveal" data-d="1">
-        <img class="zoomable" src="stories/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_39_03.png" alt="Story 1" />
-        <span class="b__tag">Story</span>
-      </div>
-      <div class="b reveal" data-d="2">
-        <img class="zoomable" src="post%20instagram/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2009_44_07.png" alt="Post 1" />
-        <span class="b__tag">Post</span>
-      </div>
+    <!-- POSTS INSTAGRAM -->
+    <h3 class="section-title reveal">Posts pro feed</h3>
+    <div class="media-grid">
+      <div class="item reveal"><img class="zoomable" src="post%20instagram/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2009_44_07.png" alt="Post 1" /></div>
+      <div class="item reveal" data-d="1"><img class="zoomable" src="post%20instagram/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2009_44_32.png" alt="Post 2" /></div>
+      <div class="item reveal" data-d="2"><img class="zoomable" src="post%20instagram/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2009_44_44.png" alt="Post 3" /></div>
+    </div>
 
-      <div class="b b--text reveal">
-        <h4>Marca <em>viva</em><br/>na rua e no feed.</h4>
-        <p>Online e offline falando a mesma língua.</p>
-      </div>
-      <div class="b reveal" data-d="1">
-        <img class="zoomable" src="stories/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_39_24.png" alt="Story 2" />
-        <span class="b__tag">Story</span>
-      </div>
-      <div class="b b--tall reveal" data-d="2">
-        <img class="zoomable" src="post%20instagram/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2009_44_32.png" alt="Post 2" />
-        <span class="b__tag">Post</span>
-      </div>
+    <!-- STORIES -->
+    <h3 class="section-title reveal">Templates de stories</h3>
+    <div class="media-grid">
+      <div class="item reveal"><img class="zoomable" src="stories/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_39_03.png" alt="Story 1" /></div>
+      <div class="item reveal" data-d="1"><img class="zoomable" src="stories/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_39_24.png" alt="Story 2" /></div>
+      <div class="item reveal" data-d="2"><img class="zoomable" src="stories/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_39_36.png" alt="Story 3" /></div>
+    </div>
 
-      <div class="b reveal">
-        <img class="zoomable" src="panfletos/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_34_21.png" alt="Panfleto 2" />
-        <span class="b__tag">Panfleto</span>
-      </div>
-      <div class="b b--wide reveal" data-d="1">
-        <img class="zoomable" src="stories/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_39_36.png" alt="Story 3" />
-        <span class="b__tag">Story</span>
-      </div>
-      <div class="b reveal" data-d="2">
-        <img class="zoomable" src="post%20instagram/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2009_44_44.png" alt="Post 3" />
-        <span class="b__tag">Post</span>
-      </div>
-      <div class="b b--wide reveal" data-d="3">
-        <img class="zoomable" src="panfletos/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_34_43.png" alt="Panfleto 3" />
-        <span class="b__tag">Panfleto</span>
-      </div>
+    <!-- PANFLETOS -->
+    <h3 class="section-title reveal">Panfleto promocional</h3>
+    <div class="media-grid">
+      <div class="item reveal"><img class="zoomable" src="panfletos/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_34_00.png" alt="Panfleto 1" /></div>
+      <div class="item reveal" data-d="1"><img class="zoomable" src="panfletos/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_34_21.png" alt="Panfleto 2" /></div>
+      <div class="item reveal" data-d="2"><img class="zoomable" src="panfletos/ChatGPT%20Image%2025%20de%20abr.%20de%202026%2C%2010_34_43.png" alt="Panfleto 3" /></div>
     </div>
 
   </div>
