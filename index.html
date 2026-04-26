@@ -26,7 +26,36 @@ body{
   text-rendering:optimizeLegibility;
   overflow-x:hidden;
 }
-img{max-width:100%;display:block}
+img{
+  max-width:100%;display:block;
+  /* PROTEÇÃO ANTI-DOWNLOAD */
+  pointer-events:none;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+  -webkit-user-drag:none;
+  -khtml-user-drag:none;
+  -moz-user-drag:none;
+  -o-user-drag:none;
+  user-drag:none;
+  -webkit-touch-callout:none;
+  -webkit-tap-highlight-color:transparent;
+}
+body{
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+}
+/* permite seleção apenas dentro do modal (pra copiar PIX) */
+.modal__box, .modal__box *, .pix-box code{
+  -webkit-user-select:text;
+  -moz-user-select:text;
+  -ms-user-select:text;
+  user-select:text;
+}
 button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 a{color:inherit;text-decoration:none}
 
@@ -1490,15 +1519,51 @@ function closeLightbox(){
   setTimeout(()=>{ lbImg.src=''; },250);
 }
 
-document.querySelectorAll('img.zoomable, .b img, .card-piece img, .variation img').forEach(img=>{
-  img.style.cursor = 'zoom-in';
-  img.addEventListener('click',(e)=>{
+/* lightbox: clica no CONTAINER (não na img, que está com pointer-events:none) */
+document.querySelectorAll('.master, .variation, .card-piece, .item').forEach(box=>{
+  const img = box.querySelector('img');
+  if(!img) return;
+  box.style.cursor = 'zoom-in';
+  box.addEventListener('click',(e)=>{
     e.stopPropagation();
     openLightbox(img.src, img.alt);
   });
 });
 lb.addEventListener('click',closeLightbox);
 lbClose.addEventListener('click',(e)=>{e.stopPropagation();closeLightbox();});
+
+/* ==========================================================
+   PROTEÇÃO ANTI-DOWNLOAD
+   ========================================================== */
+// Bloqueia menu do botão direito (desktop) e segurar (mobile)
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+// Bloqueia arrastar imagem pra desktop / outra aba
+document.addEventListener('dragstart', e => e.preventDefault());
+
+// Bloqueia atalhos de salvar e DevTools comuns
+document.addEventListener('keydown', e => {
+  // Ctrl+S, Ctrl+U (ver fonte), Ctrl+Shift+I/J/C (devtools), F12
+  if (
+    (e.ctrlKey && (e.key === 's' || e.key === 'S' || e.key === 'u' || e.key === 'U')) ||
+    (e.ctrlKey && e.shiftKey && ['I','J','C','i','j','c'].includes(e.key)) ||
+    e.key === 'F12'
+  ) {
+    e.preventDefault();
+    return false;
+  }
+});
+
+// Quando a aba perde foco (possível screenshot/snipping tool em desktop), borra a tela
+let blurTimer;
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    document.body.style.filter = 'blur(20px)';
+  } else {
+    clearTimeout(blurTimer);
+    blurTimer = setTimeout(() => { document.body.style.filter = ''; }, 200);
+  }
+});
 
 /* ==========================================================
    STATS COUNTER
